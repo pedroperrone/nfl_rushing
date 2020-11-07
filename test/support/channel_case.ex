@@ -17,6 +17,8 @@ defmodule NflRushingWeb.ChannelCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
       # Import conveniences for testing with channels
@@ -29,10 +31,10 @@ defmodule NflRushingWeb.ChannelCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(NflRushing.Repo)
+    :ok = Sandbox.checkout(NflRushing.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(NflRushing.Repo, {:shared, self()})
+      Sandbox.mode(NflRushing.Repo, {:shared, self()})
     end
 
     :ok
