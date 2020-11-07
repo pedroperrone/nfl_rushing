@@ -16,22 +16,23 @@ defmodule NflRushing.DataCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
       alias NflRushing.Repo
 
       import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
+      import Ecto.{Changeset, Query}
       import NflRushing.{DataCase, Factory}
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(NflRushing.Repo)
+    :ok = Sandbox.checkout(NflRushing.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(NflRushing.Repo, {:shared, self()})
+      Sandbox.mode(NflRushing.Repo, {:shared, self()})
     end
 
     :ok
