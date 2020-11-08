@@ -1,6 +1,8 @@
 defmodule NflRushing.Statistics.Player do
   use NflRushing, :schema
 
+  @type t :: %__MODULE__{}
+
   @fields [
     :name,
     :team,
