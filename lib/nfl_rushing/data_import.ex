@@ -1,8 +1,10 @@
 defmodule NflRushing.DataImport do
+  @spec parse_players_from_file(binary()) ::
+          {:ok, [map()]} | {:error, atom | Jason.DecodeError.t()}
   def parse_players_from_file(filename) do
     with {:ok, file_content} <- File.read(filename),
          {:ok, decoded_content} <- Jason.decode(file_content) do
-      Enum.map(decoded_content, &parse_content/1)
+      {:ok, Enum.map(decoded_content, &parse_content/1)}
     end
   end
 
@@ -11,16 +13,16 @@ defmodule NflRushing.DataImport do
     |> extract(:name, "Player", content)
     |> extract(:team, "Team", content)
     |> extract(:position, "Pos", content)
-    |> extract(:average_rushing_attempts, "Att/G", content)
+    |> extract(:average_rushing_attempts, "Att/G", content, &parse_float/1)
     |> extract(:total_rushing_attempts, "Att", content)
     |> extract(:total_rushing_yards, "Yds", content, &parse_float/1)
-    |> extract(:average_rushing_yards, "Avg", content)
-    |> extract(:average_game_yards, "Yds/G", content)
+    |> extract(:average_rushing_yards, "Avg", content, &parse_float/1)
+    |> extract(:average_game_yards, "Yds/G", content, &parse_float/1)
     |> extract(:rushing_touchdowns, "TD", content)
     |> extract(:longest_rush_yards, "Lng", content, &extract_longest_run/1)
     |> extract(:touchdown_on_longest_rush, "Lng", content, &extract_touchdown_on_longest_run/1)
     |> extract(:rushing_first_downs, "1st", content)
-    |> extract(:rushing_first_down_percentage, "1st%", content)
+    |> extract(:rushing_first_down_percentage, "1st%", content, &parse_float/1)
     |> extract(:rushing_over_20_yards, "20+", content)
     |> extract(:rushing_over_40_yards, "40+", content)
     |> extract(:fumbles, "FUM", content)
@@ -41,6 +43,8 @@ defmodule NflRushing.DataImport do
       _ -> nil
     end
   end
+
+  defp parse_float(number) when is_integer(number), do: number * 1.0
 
   defp parse_float(float), do: float
 

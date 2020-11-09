@@ -7,57 +7,57 @@ defmodule NflRushing.DataImportTest do
     test "parses the content of the file" do
       expected_content = [
         %{
-          average_game_yards: 7,
-          average_rushing_attempts: 2,
+          average_game_yards: 7.0,
+          average_rushing_attempts: 2.0,
           average_rushing_yards: 3.5,
           fumbles: 0,
           longest_rush_yards: 7.0,
           name: "Joe Banyard",
           position: "RB",
-          rushing_first_down_percentage: 0,
+          rushing_first_down_percentage: 0.0,
           rushing_first_downs: 0,
           rushing_over_20_yards: 0,
           rushing_over_40_yards: 0,
           rushing_touchdowns: 0,
           team: "JAX",
           total_rushing_attempts: 2,
-          total_rushing_yards: 7,
+          total_rushing_yards: 7.0,
           touchdown_on_longest_rush: false
         },
         %{
           average_game_yards: 1.7,
           average_rushing_attempts: 1.7,
-          average_rushing_yards: 1,
+          average_rushing_yards: 1.0,
           fumbles: 0,
           longest_rush_yards: 9.0,
           name: "Shaun Hill",
           position: "QB",
-          rushing_first_down_percentage: 0,
+          rushing_first_down_percentage: 0.0,
           rushing_first_downs: 0,
           rushing_over_20_yards: 0,
           rushing_over_40_yards: 0,
           rushing_touchdowns: 0,
           team: "MIN",
           total_rushing_attempts: 5,
-          total_rushing_yards: 5,
+          total_rushing_yards: 5.0,
           touchdown_on_longest_rush: false
         },
         %{
           average_game_yards: 0.1,
           average_rushing_attempts: 0.1,
-          average_rushing_yards: 2,
+          average_rushing_yards: 2.0,
           fumbles: 0,
-          longest_rush_yards: 2.0,
+          longest_rush_yards: 2,
           name: "Breshad Perriman",
           position: "WR",
-          rushing_first_down_percentage: 0,
+          rushing_first_down_percentage: 0.0,
           rushing_first_downs: 0,
           rushing_over_20_yards: 0,
           rushing_over_40_yards: 0,
           rushing_touchdowns: 0,
           team: "BAL",
           total_rushing_attempts: 1,
-          total_rushing_yards: 2,
+          total_rushing_yards: 2.0,
           touchdown_on_longest_rush: false
         },
         %{
@@ -75,12 +75,13 @@ defmodule NflRushing.DataImportTest do
           rushing_touchdowns: 6,
           team: "NO",
           total_rushing_attempts: 205,
-          total_rushing_yards: 1043,
+          total_rushing_yards: 1043.0,
           touchdown_on_longest_rush: true
         }
       ]
 
-      assert DataImport.parse_players_from_file("test/fixtures/players.json") == expected_content
+      assert DataImport.parse_players_from_file("test/fixtures/players.json") ===
+               {:ok, expected_content}
     end
 
     test "returns an error when the file does not exist" do
