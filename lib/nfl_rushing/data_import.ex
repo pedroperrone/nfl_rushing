@@ -8,6 +8,7 @@ defmodule NflRushing.DataImport do
     end
   end
 
+  @spec parse_content(map()) :: map()
   defp parse_content(content) do
     %{}
     |> extract(:name, "Player", content)
@@ -28,12 +29,14 @@ defmodule NflRushing.DataImport do
     |> extract(:fumbles, "FUM", content)
   end
 
+  @spec extract(map(), atom(), binary(), map(), (any() -> any())) :: map()
   defp extract(map, key, path, content, modifier \\ & &1) do
     value = content |> Map.get(path) |> modifier.()
 
     Map.put(map, key, value)
   end
 
+  @spec parse_float(binary() | number()) :: float() | nil
   defp parse_float(string) when is_binary(string) do
     string
     |> String.replace(",", "")
@@ -48,6 +51,7 @@ defmodule NflRushing.DataImport do
 
   defp parse_float(float), do: float
 
+  @spec extract_longest_run(binary() | number()) :: float() | nil
   defp extract_longest_run(longest_run_string) when is_binary(longest_run_string) do
     longest_run_string
     |> String.replace("T", "")
@@ -56,6 +60,7 @@ defmodule NflRushing.DataImport do
 
   defp extract_longest_run(longest_run), do: parse_float(longest_run)
 
+  @spec extract_touchdown_on_longest_run(binary() | number()) :: boolean()
   defp extract_touchdown_on_longest_run(longest_run_string) when is_binary(longest_run_string) do
     String.ends_with?(longest_run_string, "T")
   end
