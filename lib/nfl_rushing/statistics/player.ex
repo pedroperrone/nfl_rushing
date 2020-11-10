@@ -1,6 +1,8 @@
 defmodule NflRushing.Statistics.Player do
   use NflRushing, :schema
 
+  @type t :: %__MODULE__{}
+
   @fields [
     :name,
     :team,
@@ -37,8 +39,6 @@ defmodule NflRushing.Statistics.Player do
     field :rushing_over_20_yards, :integer
     field :rushing_over_40_yards, :integer
     field :fumbles, :integer
-
-    timestamps()
   end
 
   def changeset(player, attrs) do
