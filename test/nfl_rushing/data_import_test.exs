@@ -47,7 +47,7 @@ defmodule NflRushing.DataImportTest do
           average_rushing_attempts: 0.1,
           average_rushing_yards: 2.0,
           fumbles: 0,
-          longest_rush_yards: 2,
+          longest_rush_yards: 2.0,
           name: "Breshad Perriman",
           position: "WR",
           rushing_first_down_percentage: 0.0,

@@ -54,7 +54,7 @@ defmodule NflRushing.DataImport do
     |> parse_float()
   end
 
-  defp extract_longest_run(longest_run), do: longest_run
+  defp extract_longest_run(longest_run), do: parse_float(longest_run)
 
   defp extract_touchdown_on_longest_run(longest_run_string) when is_binary(longest_run_string) do
     String.ends_with?(longest_run_string, "T")
