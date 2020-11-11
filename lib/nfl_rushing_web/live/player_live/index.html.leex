@@ -1,0 +1,53 @@
+<h1>Players</h1>
+<div>
+  <%= f = form_for :sorting, "#",
+    id: "sorting-form",
+    phx_submit: "apply_sort" %>
+
+    <%= label f, :Sorting %>
+    <%= select f, :sorting_order, [{"Desc", "desc"}, {"Asc", "asc"}] %>
+    <%= select f, :sorting_field, [{"Name", "name"},
+                                   {"Yds", "total_rushing_yards"},
+                                   {"Lng", "longest_rush_yards"},
+                                   {"TD", "rushing_touchdowns"}] %>
+    <%= submit "Apply", phx_disable_with: "Sorting data..." %>
+  </form>
+</div>
+<table>
+  <tr>
+    <th>Player</th>
+    <th>Team</th>
+    <th>Pos</th>
+    <th>Att/G</th>
+    <th>Att</th>
+    <th>Yds</th>
+    <th>Avg</th>
+    <th>Yds/G</th>
+    <th>TD</th>
+    <th>Lng</th>
+    <th>1st</th>
+    <th>1st%</th>
+    <th>20+</th>
+    <th>40+</th>
+    <th>FUM</th>
+  </tr>
+  <%= for player <- @players_page.entries do %>
+    <tr id="player-<%= player.id %>">
+      <td><%= player.name %></td>
+      <td><%= player.team %></td>
+      <td><%= player.position %></td>
+      <td><%= player.average_rushing_attempts %></td>
+      <td><%= player.total_rushing_attempts %></td>
+      <td><%= player.total_rushing_yards %></td>
+      <td><%= player.average_rushing_yards %></td>
+      <td><%= player.average_game_yards %></td>
+      <td><%= player.rushing_touchdowns %></td>
+      <td><%= player.longest_rush_yards %></td>
+      <td><%= player.rushing_first_downs %></td>
+      <td><%= player.rushing_first_down_percentage %></td>
+      <td><%= player.rushing_over_20_yards %></td>
+      <td><%= player.rushing_over_40_yards %></td>
+      <td><%= player.fumbles %></td>
+    </tr>
+  <% end %>
+</table>
