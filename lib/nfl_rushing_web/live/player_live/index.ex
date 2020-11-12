@@ -6,10 +6,16 @@ defmodule NflRushingWeb.PlayerLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok,
+    {:ok, assign(socket, sorting_order: :asc, sorting_field: :name)}
+  end
+
+  @impl true
+  def handle_params(params, _url, socket) do
+    page = parse_page(params)
+
+    {:noreply,
      socket
-     |> assign(sorting_order: :asc, sorting_field: :name)
-     |> assign(page: 1, page_size: 20)
+     |> assign(:page, page)
      |> assign_players_page()}
   end
 
@@ -28,6 +34,15 @@ defmodule NflRushingWeb.PlayerLive.Index do
      |> assign_players_page()}
   end
 
+  defp parse_page(params) do
+    page = Map.get(params, "page", "1")
+
+    case Integer.parse(page) do
+      {page, _} -> page
+      :error -> 1
+    end
+  end
+
   defp assign_players_page(%Socket{assigns: assigns} = socket) do
     assign(
       socket,
@@ -36,7 +51,7 @@ defmodule NflRushingWeb.PlayerLive.Index do
         assigns.sorting_field,
         assigns.sorting_order,
         assigns.page,
-        assigns.page_size
+        20
       )
     )
   end
@@ -48,4 +63,12 @@ defmodule NflRushingWeb.PlayerLive.Index do
 
   defp cast_sorting_attribute("desc"), do: :desc
   defp cast_sorting_attribute("asc"), do: :asc
+
+  defp pagination_link(socket, label, page, active?) do
+    live_patch(label,
+      to: Routes.player_index_path(socket, :index, page: page),
+      id: "page-#{label}",
+      class: if(active?, do: "pagination active", else: "pagination")
+    )
+  end
 end

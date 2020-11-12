@@ -42,7 +42,7 @@
       <td><%= player.average_rushing_yards %></td>
       <td><%= player.average_game_yards %></td>
       <td><%= player.rushing_touchdowns %></td>
-      <td><%= player.longest_rush_yards %></td>
+      <td><%= player.longest_rush_yards %><%= if player.touchdown_on_longest_rush, do: "T" %></td>
       <td><%= player.rushing_first_downs %></td>
       <td><%= player.rushing_first_down_percentage %></td>
       <td><%= player.rushing_over_20_yards %></td>
@@ -51,3 +51,14 @@
     </tr>
   <% end %>
 </table>
+<div>
+  <%= if @page > 1 do %>
+    <%= pagination_link(@socket, "Previous", @page - 1, false) %>
+  <% end %>
+  <%= for page <- (@page - 2)..(@page + 2), page > 0 and page <= @players_page.total_pages do %>
+    <%= pagination_link(@socket, page, page, page == @page) %>
+  <% end %>
+  <%= if @page < @players_page.total_pages do %>
+    <%= pagination_link(@socket, "Next", @page + 1, false) %>
+  <% end %>
+</div>
