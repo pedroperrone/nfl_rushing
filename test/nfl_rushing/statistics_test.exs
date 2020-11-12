@@ -21,4 +21,44 @@ defmodule NflRushing.StatisticsTest do
                Statistics.insert_players_from_file("test/fixtures/invalid.json")
     end
   end
+
+  describe "list_players/4" do
+    test "returns the players sorted by the given field" do
+      player_1 = insert(:player, name: "A")
+      player_2 = insert(:player, name: "C")
+      player_3 = insert(:player, name: "B")
+
+      page = Statistics.list_players(:name, :asc, 1, 3)
+
+      assert page.page_number == 1
+      assert page.page_size == 3
+      assert Enum.map(page.entries, & &1.id) == [player_1.id, player_3.id, player_2.id]
+    end
+
+    test "returns the players sorted in the given order" do
+      player_1 = insert(:player, name: "A")
+      player_2 = insert(:player, name: "C")
+      player_3 = insert(:player, name: "B")
+
+      page = Statistics.list_players(:name, :desc, 1, 3)
+
+      assert page.page_number == 1
+      assert page.page_size == 3
+      assert Enum.map(page.entries, & &1.id) == [player_2.id, player_3.id, player_1.id]
+    end
+
+    test "paginates correctly" do
+      _player_1 = insert(:player, average_rushing_attempts: 1)
+      player_2 = insert(:player, average_rushing_attempts: 2)
+      player_3 = insert(:player, average_rushing_attempts: 3)
+      _player_4 = insert(:player, average_rushing_attempts: 4)
+      _player_5 = insert(:player, average_rushing_attempts: 5)
+
+      page = Statistics.list_players(:average_rushing_attempts, :desc, 2, 2)
+
+      assert page.page_number == 2
+      assert page.page_size == 2
+      assert Enum.map(page.entries, & &1.id) == [player_3.id, player_2.id]
+    end
+  end
 end

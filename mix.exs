@@ -49,6 +49,7 @@ defmodule NflRushing.MixProject do
       {:phoenix, "~> 1.5.6"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
+      {:scrivener_ecto, "~> 2.6"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"}
     ]
