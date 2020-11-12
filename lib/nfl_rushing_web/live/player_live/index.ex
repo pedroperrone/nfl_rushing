@@ -34,6 +34,7 @@ defmodule NflRushingWeb.PlayerLive.Index do
      |> assign_players_page()}
   end
 
+  @spec parse_page(map()) :: integer()
   defp parse_page(params) do
     page = Map.get(params, "page", "1")
 
@@ -43,6 +44,7 @@ defmodule NflRushingWeb.PlayerLive.Index do
     end
   end
 
+  @spec assign_players_page(Socket.t()) :: Socket.t()
   defp assign_players_page(%Socket{assigns: assigns} = socket) do
     assign(
       socket,
@@ -56,6 +58,7 @@ defmodule NflRushingWeb.PlayerLive.Index do
     )
   end
 
+  @spec cast_sorting_attribute(binary()) :: atom()
   defp cast_sorting_attribute("name"), do: :name
   defp cast_sorting_attribute("total_rushing_yards"), do: :total_rushing_yards
   defp cast_sorting_attribute("longest_rush_yards"), do: :longest_rush_yards
@@ -64,6 +67,7 @@ defmodule NflRushingWeb.PlayerLive.Index do
   defp cast_sorting_attribute("desc"), do: :desc
   defp cast_sorting_attribute("asc"), do: :asc
 
+  @spec pagination_link(Socket.t(), binary() | integer(), integer(), boolean()) :: any()
   defp pagination_link(socket, label, page, active?) do
     live_patch(label,
       to: Routes.player_index_path(socket, :index, page: page),
