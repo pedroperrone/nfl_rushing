@@ -15,7 +15,7 @@ defmodule NflRushingWeb.PlayerLive.IndexTest do
       assert_html_includes_strings_in_order(html, player_ids)
     end
 
-    test "mark longest runs with touchdowns", %{conn: conn} do
+    test "marks longest runs with touchdowns", %{conn: conn} do
       insert(:player, longest_rush_yards: 53, touchdown_on_longest_rush: true)
 
       {:ok, _index_live, html} = live(conn, Routes.player_index_path(conn, :index))
@@ -23,7 +23,7 @@ defmodule NflRushingWeb.PlayerLive.IndexTest do
       assert html =~ "53.0T"
     end
 
-    test "use the provided page", %{conn: conn} do
+    test "uses the provided page", %{conn: conn} do
       [player | _players] = 21 |> insert_list(:player) |> Enum.sort_by(& &1.name, &>=/2)
 
       {:ok, _index_live, html} = live(conn, Routes.player_index_path(conn, :index, page: 2))
@@ -69,6 +69,22 @@ defmodule NflRushingWeb.PlayerLive.IndexTest do
 
       player_ids = [player_3.id, player_2.id, player_1.id]
       assert_html_includes_strings_in_order(html, player_ids)
+    end
+
+    test "applies name filter when filter form is submited", %{conn: conn} do
+      player_1 = insert(:player, name: "A")
+      player_2 = insert(:player, name: "ba")
+      player_3 = insert(:player, name: "b")
+      {:ok, index_live, _html} = live(conn, Routes.player_index_path(conn, :index))
+
+      html =
+        index_live
+        |> form("#name-filter-form", name_filter: %{name_filter: "a"})
+        |> render_submit()
+
+      player_ids = [player_1.id, player_2.id]
+      assert_html_includes_strings_in_order(html, player_ids)
+      refute html =~ player_3.id
     end
 
     test "shows all pages when there are enough to paginate", %{conn: conn} do

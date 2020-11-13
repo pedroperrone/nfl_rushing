@@ -22,17 +22,30 @@ defmodule NflRushing.StatisticsTest do
     end
   end
 
-  describe "list_players/4" do
-    test "returns the players sorted by the given field" do
+  describe "list_players/5" do
+    test "returns the players sorted by the given field when the name filter is nil" do
       player_1 = insert(:player, name: "A")
       player_2 = insert(:player, name: "C")
       player_3 = insert(:player, name: "B")
 
-      page = Statistics.list_players(:name, :asc, 1, 3)
+      page = Statistics.list_players(:name, :asc, 1, 3, nil)
 
       assert page.page_number == 1
       assert page.page_size == 3
       assert Enum.map(page.entries, & &1.id) == [player_1.id, player_3.id, player_2.id]
+    end
+
+    test "returns the players sorted by the given field and filtered by name" do
+      player_1 = insert(:player, name: "xAx")
+      player_2 = insert(:player, name: "yax")
+      _player_3 = insert(:player, name: "B")
+
+      page = Statistics.list_players(:name, :asc, 1, 3, "a")
+
+      assert page.page_number == 1
+      assert page.page_size == 3
+      assert page.total_entries == 2
+      assert Enum.map(page.entries, & &1.id) == [player_1.id, player_2.id]
     end
 
     test "returns the players sorted in the given order" do
@@ -40,7 +53,7 @@ defmodule NflRushing.StatisticsTest do
       player_2 = insert(:player, name: "C")
       player_3 = insert(:player, name: "B")
 
-      page = Statistics.list_players(:name, :desc, 1, 3)
+      page = Statistics.list_players(:name, :desc, 1, 3, nil)
 
       assert page.page_number == 1
       assert page.page_size == 3
@@ -54,7 +67,7 @@ defmodule NflRushing.StatisticsTest do
       _player_4 = insert(:player, average_rushing_attempts: 4)
       _player_5 = insert(:player, average_rushing_attempts: 5)
 
-      page = Statistics.list_players(:average_rushing_attempts, :desc, 2, 2)
+      page = Statistics.list_players(:average_rushing_attempts, :desc, 2, 2, nil)
 
       assert page.page_number == 2
       assert page.page_size == 2
