@@ -37,7 +37,7 @@ defmodule NflRushing.StatisticsTest do
 
     test "returns the players sorted by the given field and filtered by name" do
       player_1 = insert(:player, name: "xAx")
-      player_2 = insert(:player, name: "xax")
+      player_2 = insert(:player, name: "yax")
       _player_3 = insert(:player, name: "B")
 
       page = Statistics.list_players(:name, :asc, 1, 3, "a")
