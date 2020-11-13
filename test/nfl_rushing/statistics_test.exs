@@ -74,4 +74,36 @@ defmodule NflRushing.StatisticsTest do
       assert Enum.map(page.entries, & &1.id) == [player_3.id, player_2.id]
     end
   end
+
+  describe "list_players/3" do
+    test "returns the players sorted by the given field when the name filter is nil" do
+      player_1 = insert(:player, name: "A")
+      player_2 = insert(:player, name: "C")
+      player_3 = insert(:player, name: "B")
+
+      players = Statistics.list_players(:name, :asc, nil)
+
+      assert Enum.map(players, & &1.id) == [player_1.id, player_3.id, player_2.id]
+    end
+
+    test "returns the players sorted by the given field and filtered by name" do
+      player_1 = insert(:player, name: "xAx")
+      player_2 = insert(:player, name: "yax")
+      _player_3 = insert(:player, name: "B")
+
+      players = Statistics.list_players(:name, :asc, "a")
+
+      assert Enum.map(players, & &1.id) == [player_1.id, player_2.id]
+    end
+
+    test "returns the players sorted in the given order" do
+      player_1 = insert(:player, name: "A")
+      player_2 = insert(:player, name: "C")
+      player_3 = insert(:player, name: "B")
+
+      players = Statistics.list_players(:name, :desc, nil)
+
+      assert Enum.map(players, & &1.id) == [player_2.id, player_3.id, player_1.id]
+    end
+  end
 end

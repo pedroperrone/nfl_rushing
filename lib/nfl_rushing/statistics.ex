@@ -17,9 +17,22 @@ defmodule NflRushing.Statistics do
   @spec list_players(atom(), sort_order(), integer(), integer(), binary()) :: Scrivener.Page.t()
   def list_players(ordering_field, order, page, page_size, name_filter) do
     Player
+    |> players_query(ordering_field, order, name_filter)
+    |> Repo.paginate(%{page: page, page_size: page_size})
+  end
+
+  @spec list_players(atom(), sort_order(), binary()) :: [Player.t()]
+  def list_players(ordering_field, order, name_filter) do
+    Player
+    |> players_query(ordering_field, order, name_filter)
+    |> Repo.all()
+  end
+
+  @spec players_query(Ecto.Queryable.t(), atom(), sort_order(), binary()) :: Ecto.Query.t()
+  defp players_query(query, ordering_field, order, name_filter) do
+    query
     |> order_by([player], {^order, field(player, ^ordering_field)})
     |> apply_name_filter(name_filter)
-    |> Repo.paginate(%{page: page, page_size: page_size})
   end
 
   @spec apply_name_filter(Ecto.Query.t(), binary()) :: Ecto.Query.t()
