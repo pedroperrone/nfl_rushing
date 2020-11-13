@@ -6,7 +6,7 @@ defmodule NflRushingWeb.PlayerLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, sorting_order: :asc, sorting_field: :name)}
+    {:ok, assign(socket, sorting_order: :asc, sorting_field: :name, name_filter: nil)}
   end
 
   @impl true
@@ -34,6 +34,17 @@ defmodule NflRushingWeb.PlayerLive.Index do
      |> assign_players_page()}
   end
 
+  def handle_event(
+        "apply_name_filter",
+        %{"name_filter" => %{"name_filter" => name_filter}},
+        socket
+      ) do
+    {:noreply,
+     socket
+     |> assign(:name_filter, name_filter)
+     |> assign_players_page()}
+  end
+
   @spec parse_page(map()) :: integer()
   defp parse_page(params) do
     page = Map.get(params, "page", "1")
@@ -53,7 +64,8 @@ defmodule NflRushingWeb.PlayerLive.Index do
         assigns.sorting_field,
         assigns.sorting_order,
         assigns.page,
-        20
+        20,
+        assigns.name_filter
       )
     )
   end
@@ -67,12 +79,18 @@ defmodule NflRushingWeb.PlayerLive.Index do
   defp cast_sorting_attribute("desc"), do: :desc
   defp cast_sorting_attribute("asc"), do: :asc
 
-  @spec pagination_link(Socket.t(), binary() | integer(), integer(), boolean()) :: any()
-  defp pagination_link(socket, label, page, active?) do
+  @spec pagination_link(Socket.t(), binary() | integer(), integer(), boolean(), binary()) :: any()
+  defp pagination_link(socket, label, page, active?, name_filter) do
+    params = build_page_params(page, name_filter)
+
     live_patch(label,
-      to: Routes.player_index_path(socket, :index, page: page),
+      to: Routes.player_index_path(socket, :index, params),
       id: "page-#{label}",
       class: if(active?, do: "pagination active", else: "pagination")
     )
   end
+
+  @spec build_page_params(integer(), nil | binary()) :: map()
+  defp build_page_params(page, nil), do: %{page: page}
+  defp build_page_params(page, name), do: %{page: page, name: name}
 end

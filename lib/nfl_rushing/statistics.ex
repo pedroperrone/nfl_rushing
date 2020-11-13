@@ -14,10 +14,20 @@ defmodule NflRushing.Statistics do
     end
   end
 
-  @spec list_players(atom(), sort_order(), integer(), integer()) :: Scrivener.Page.t()
-  def list_players(field, order, page, page_size) do
+  @spec list_players(atom(), sort_order(), integer(), integer(), binary()) :: Scrivener.Page.t()
+  def list_players(ordering_field, order, page, page_size, name_filter) do
     Player
-    |> order_by([player], {^order, field(player, ^field)})
+    |> order_by([player], {^order, field(player, ^ordering_field)})
+    |> apply_name_filter(name_filter)
     |> Repo.paginate(%{page: page, page_size: page_size})
+  end
+
+  @spec apply_name_filter(Ecto.Query.t(), binary()) :: Ecto.Query.t()
+  defp apply_name_filter(query, nil), do: query
+
+  defp apply_name_filter(query, name_filter) do
+    ilike_pattern = "%#{name_filter}%"
+
+    where(query, [player], ilike(player.name, fragment("?", ^ilike_pattern)))
   end
 end

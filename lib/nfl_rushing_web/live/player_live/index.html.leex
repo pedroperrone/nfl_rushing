@@ -5,11 +5,19 @@
     phx_submit: "apply_sort" %>
 
     <%= label f, :Sorting %>
-    <%= select f, :sorting_order, [{"Desc", "desc"}, {"Asc", "asc"}] %>
+    <%= select f, :sorting_order, [{"Desc", "desc"}, {"Asc", "asc"}], selected: @sorting_order %>
     <%= select f, :sorting_field, [{"Name", "name"},
                                    {"Yds", "total_rushing_yards"},
                                    {"Lng", "longest_rush_yards"},
-                                   {"TD", "rushing_touchdowns"}] %>
+                                   {"TD", "rushing_touchdowns"}], selected: @sorting_field %>
+    <%= submit "Apply", phx_disable_with: "Sorting data..." %>
+  </form>
+  <%= f = form_for :name_filter, "#",
+    id: "name-filter-form",
+    phx_submit: "apply_name_filter" %>
+
+    <%= label f, :"Name filter" %>
+    <%= text_input f, :name_filter %>
     <%= submit "Apply", phx_disable_with: "Sorting data..." %>
   </form>
 </div>
@@ -53,12 +61,12 @@
 </table>
 <div>
   <%= if @page > 1 do %>
-    <%= pagination_link(@socket, "Previous", @page - 1, false) %>
+    <%= pagination_link(@socket, "Previous", @page - 1, false, @name_filter) %>
   <% end %>
   <%= for page <- (@page - 2)..(@page + 2), page > 0 and page <= @players_page.total_pages do %>
-    <%= pagination_link(@socket, page, page, page == @page) %>
+    <%= pagination_link(@socket, page, page, page == @page, @name_filter) %>
   <% end %>
   <%= if @page < @players_page.total_pages do %>
-    <%= pagination_link(@socket, "Next", @page + 1, false) %>
+    <%= pagination_link(@socket, "Next", @page + 1, false, @name_filter) %>
   <% end %>
 </div>
