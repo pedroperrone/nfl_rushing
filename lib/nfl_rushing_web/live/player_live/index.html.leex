@@ -65,12 +65,12 @@
           target: "_blank") %>
 <div>
   <%= if @page > 1 do %>
-    <%= pagination_link(@socket, "Previous", @page - 1, false, @name_filter) %>
+    <%= pagination_link(@socket, "Previous", @page - 1, false) %>
   <% end %>
   <%= for page <- (@page - 2)..(@page + 2), page > 0 and page <= @players_page.total_pages do %>
-    <%= pagination_link(@socket, page, page, page == @page, @name_filter) %>
+    <%= pagination_link(@socket, page, page, page == @page) %>
   <% end %>
   <%= if @page < @players_page.total_pages do %>
-    <%= pagination_link(@socket, "Next", @page + 1, false, @name_filter) %>
+    <%= pagination_link(@socket, "Next", @page + 1, false) %>
   <% end %>
 </div>
