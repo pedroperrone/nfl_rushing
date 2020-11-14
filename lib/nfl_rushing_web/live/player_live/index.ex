@@ -88,18 +88,12 @@ defmodule NflRushingWeb.PlayerLive.Index do
     end
   end
 
-  @spec pagination_link(Socket.t(), binary() | integer(), integer(), boolean(), binary()) :: any()
-  defp pagination_link(socket, label, page, active?, name_filter) do
-    params = build_page_params(page, name_filter)
-
+  @spec pagination_link(Socket.t(), binary() | integer(), integer(), boolean()) :: any()
+  defp pagination_link(socket, label, page, active?) do
     live_patch(label,
-      to: Routes.player_index_path(socket, :index, params),
+      to: Routes.player_index_path(socket, :index, page: page),
       id: "page-#{label}",
       class: if(active?, do: "pagination active", else: "pagination")
     )
   end
-
-  @spec build_page_params(integer(), nil | binary()) :: map()
-  defp build_page_params(page, nil), do: %{page: page}
-  defp build_page_params(page, name), do: %{page: page, name: name}
 end
