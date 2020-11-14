@@ -59,18 +59,23 @@
     </tr>
   <% end %>
 </table>
-<%= link("Download statistics",
-          to: Routes.player_path(@socket, :index, name: @name_filter, sorting_field: @sorting_field, sorting_order: @sorting_order),
-          method: :get,
-          target: "_blank") %>
-<div>
-  <%= if @page > 1 do %>
-    <%= pagination_link(@socket, "Previous", @page - 1, false) %>
-  <% end %>
-  <%= for page <- (@page - 2)..(@page + 2), page > 0 and page <= @players_page.total_pages do %>
-    <%= pagination_link(@socket, page, page, page == @page) %>
-  <% end %>
-  <%= if @page < @players_page.total_pages do %>
-    <%= pagination_link(@socket, "Next", @page + 1, false) %>
-  <% end %>
+
+<div class="footer">
+  <%= link("Download statistics",
+            to: Routes.player_path(@socket, :index, name: @name_filter, sorting_field: @sorting_field, sorting_order: @sorting_order),
+            method: :get,
+            target: "_blank",
+            class: "pagination") %>
+
+  <div class="pagination-block">
+    <%= if @page > 1 do %>
+      <%= pagination_link(@socket, "Previous", @page - 1, false) %>
+    <% end %>
+    <%= for page <- (@page - 2)..(@page + 2), page > 0 and page <= @players_page.total_pages do %>
+      <%= pagination_link(@socket, page, page, page == @page) %>
+    <% end %>
+    <%= if @page < @players_page.total_pages do %>
+      <%= pagination_link(@socket, "Next", @page + 1, false) %>
+    <% end %>
+  </div>
 </div>
