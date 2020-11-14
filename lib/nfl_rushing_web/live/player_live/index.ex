@@ -2,6 +2,7 @@ defmodule NflRushingWeb.PlayerLive.Index do
   use NflRushingWeb, :live_view
 
   alias NflRushing.Statistics
+  alias NflRushing.Statistics.Player
   alias Phoenix.LiveView.Socket
 
   @impl true

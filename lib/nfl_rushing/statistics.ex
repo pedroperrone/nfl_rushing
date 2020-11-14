@@ -14,14 +14,15 @@ defmodule NflRushing.Statistics do
     end
   end
 
-  @spec list_players(atom(), sort_order(), integer(), integer(), binary()) :: Scrivener.Page.t()
+  @spec list_players(atom(), sort_order(), integer(), integer(), binary() | nil) ::
+          Scrivener.Page.t()
   def list_players(ordering_field, order, page, page_size, name_filter) do
     Player
     |> players_query(ordering_field, order, name_filter)
     |> Repo.paginate(%{page: page, page_size: page_size})
   end
 
-  @spec list_players(atom(), sort_order(), binary()) :: [Player.t()]
+  @spec list_players(atom(), sort_order(), binary() | nil) :: [Player.t()]
   def list_players(ordering_field, order, name_filter) do
     Player
     |> players_query(ordering_field, order, name_filter)

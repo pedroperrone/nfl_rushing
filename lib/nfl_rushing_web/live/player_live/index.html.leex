@@ -50,7 +50,7 @@
       <td><%= player.average_rushing_yards %></td>
       <td><%= player.average_game_yards %></td>
       <td><%= player.rushing_touchdowns %></td>
-      <td><%= player.longest_rush_yards %><%= if player.touchdown_on_longest_rush, do: "T" %></td>
+      <td><%= Player.put_longest_rush_with_touchdown(player).longest_rush_with_touchdown %></td>
       <td><%= player.rushing_first_downs %></td>
       <td><%= player.rushing_first_down_percentage %></td>
       <td><%= player.rushing_over_20_yards %></td>

@@ -39,13 +39,25 @@ defmodule NflRushing.Statistics.Player do
     field :rushing_over_20_yards, :integer
     field :rushing_over_40_yards, :integer
     field :fumbles, :integer
+
+    field :longest_rush_with_touchdown, :string, virtual: true
   end
 
+  @spec changeset(__MODULE__.t(), map()) :: Ecto.Changeset.t()
   def changeset(player, attrs) do
     player
     |> cast(attrs, @fields)
     |> validate_length(:name, max: 255)
     |> validate_length(:team, max: 255)
     |> validate_length(:position, max: 255)
+  end
+
+  @spec put_longest_rush_with_touchdown(__MODULE__.t()) :: __MODULE__.t()
+  def put_longest_rush_with_touchdown(%__MODULE__{touchdown_on_longest_rush: true} = player) do
+    %{player | longest_rush_with_touchdown: "#{player.longest_rush_yards}T"}
+  end
+
+  def put_longest_rush_with_touchdown(%__MODULE__{} = player) do
+    %{player | longest_rush_with_touchdown: to_string(player.longest_rush_yards)}
   end
 end
