@@ -6,11 +6,17 @@ defmodule NflRushing.Statistics do
 
   @type sort_order :: :asc | :desc
 
-  @spec insert_players_from_file(binary()) ::
-          {number(), [Player.t()]} | {:error, atom | Jason.DecodeError.t()}
-  def insert_players_from_file(file_name) do
+  @spec insert_players_from_file(binary(), integer()) ::
+          {number(), nil} | {:error, atom | Jason.DecodeError.t()}
+  def insert_players_from_file(file_name, batch_size \\ 500) do
     with {:ok, params} <- DataImport.parse_players_from_file(file_name) do
-      Repo.insert_all(Player, params, returning: true)
+      insertions_count =
+        params
+        |> Enum.chunk_every(batch_size)
+        |> Enum.map(&Repo.insert_all(Player, &1))
+        |> Enum.reduce(0, fn {inserted_rows, _}, accumulator -> accumulator + inserted_rows end)
+
+      {insertions_count, nil}
     end
   end
 
