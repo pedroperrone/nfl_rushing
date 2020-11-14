@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/pedroperrone/nfl_rushing.svg?style=svg)](https://app.circleci.com/pipelines/github/pedroperrone/nfl_rushing)
+
 # NflRushing
 
 This repository contains the implementation of an application that exhibits football data. It was built with the language Elixir and the framework Phoenix, along with the Phoenix LiveView library.
