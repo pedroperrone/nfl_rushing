@@ -87,6 +87,16 @@ defmodule NflRushingWeb.PlayerLive.IndexTest do
       refute html =~ player_3.id
     end
 
+    test "puts page 1 when name filter is applied", %{conn: conn} do
+      {:ok, index_live, _html} = live(conn, Routes.player_index_path(conn, :index, page: 5))
+
+      index_live
+      |> form("#name-filter-form", name_filter: %{name_filter: "a"})
+      |> render_submit()
+
+      assert_patch(index_live, Routes.player_index_path(conn, :index, page: 1))
+    end
+
     test "shows all pages when there are enough to paginate", %{conn: conn} do
       insert_list(100, :player)
 
