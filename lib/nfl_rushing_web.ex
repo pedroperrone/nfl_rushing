@@ -21,9 +21,14 @@ defmodule NflRushingWeb do
     quote do
       use Phoenix.Controller, namespace: NflRushingWeb
 
-      import Plug.Conn
+      import Ecto.Changeset
+      import NflRushingWeb.ErrorHelpers
       import NflRushingWeb.Gettext
+      import Plug.Conn
+
       alias NflRushingWeb.Router.Helpers, as: Routes
+
+      action_fallback NflRushingWeb.FallbackController
     end
   end
 

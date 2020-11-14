@@ -17,7 +17,7 @@
     phx_submit: "apply_name_filter" %>
 
     <%= label f, :"Name filter" %>
-    <%= text_input f, :name_filter %>
+    <%= text_input f, :name_filter, value: @name_filter %>
     <%= submit "Apply", phx_disable_with: "Sorting data..." %>
   </form>
 </div>
@@ -50,7 +50,7 @@
       <td><%= player.average_rushing_yards %></td>
       <td><%= player.average_game_yards %></td>
       <td><%= player.rushing_touchdowns %></td>
-      <td><%= player.longest_rush_yards %><%= if player.touchdown_on_longest_rush, do: "T" %></td>
+      <td><%= Player.put_longest_rush_with_touchdown(player).longest_rush_with_touchdown %></td>
       <td><%= player.rushing_first_downs %></td>
       <td><%= player.rushing_first_down_percentage %></td>
       <td><%= player.rushing_over_20_yards %></td>
@@ -59,6 +59,10 @@
     </tr>
   <% end %>
 </table>
+<%= link("Download statistics",
+          to: Routes.player_path(@socket, :index, name: @name_filter, sorting_field: @sorting_field, sorting_order: @sorting_order),
+          method: :get,
+          target: "_blank") %>
 <div>
   <%= if @page > 1 do %>
     <%= pagination_link(@socket, "Previous", @page - 1, false, @name_filter) %>

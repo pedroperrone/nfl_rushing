@@ -30,4 +30,24 @@ defmodule NflRushing.Statistics.PlayerTest do
              }
     end
   end
+
+  describe "put_longest_rush_with_touchdown/1" do
+    test "puts a T on the end of the string if tha player has a touchdown on longest rush" do
+      player =
+        :player
+        |> build(longest_rush_yards: 50.0, touchdown_on_longest_rush: true)
+        |> Player.put_longest_rush_with_touchdown()
+
+      assert player.longest_rush_with_touchdown == "50.0T"
+    end
+
+    test "only converts the longest rush to string when there isn't a touchdown" do
+      player =
+        :player
+        |> build(longest_rush_yards: 50.0, touchdown_on_longest_rush: false)
+        |> Player.put_longest_rush_with_touchdown()
+
+      assert player.longest_rush_with_touchdown == "50.0"
+    end
+  end
 end

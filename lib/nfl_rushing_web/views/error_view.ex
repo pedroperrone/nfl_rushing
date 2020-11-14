@@ -1,6 +1,10 @@
 defmodule NflRushingWeb.ErrorView do
   use NflRushingWeb, :view
 
+  def render("errors.json", %{errors: errors}) do
+    %{errors: errors}
+  end
+
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
   # def render("500.html", _assigns) do
