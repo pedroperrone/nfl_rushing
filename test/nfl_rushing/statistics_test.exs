@@ -3,13 +3,13 @@ defmodule NflRushing.StatisticsTest do
 
   alias NflRushing.Statistics
 
-  describe "insert_players_from_file/1" do
+  describe "insert_players_from_file/2" do
     test "inserts all the given player statistics" do
-      assert {4, players} = Statistics.insert_players_from_file("test/fixtures/players.json")
+      assert Statistics.insert_players_from_file("test/fixtures/players.json") == {4, nil}
+    end
 
-      Enum.each(players, fn player ->
-        refute is_nil(player.id)
-      end)
+    test "inserts correctly when the amount of players exceeds batch size" do
+      assert Statistics.insert_players_from_file("test/fixtures/players.json", 3) == {4, nil}
     end
 
     test "returns an error when the file does not exist" do
