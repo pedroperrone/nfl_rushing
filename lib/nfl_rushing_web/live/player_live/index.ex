@@ -44,7 +44,7 @@ defmodule NflRushingWeb.PlayerLive.Index do
     {:noreply,
      socket
      |> assign(:name_filter, name_filter)
-     |> assign_players_page()}
+     |> push_patch(to: Routes.player_index_path(socket, :index, page: 1))}
   end
 
   @spec parse_page(map()) :: integer()
