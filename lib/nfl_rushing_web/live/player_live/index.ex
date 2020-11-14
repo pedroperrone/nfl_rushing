@@ -3,6 +3,7 @@ defmodule NflRushingWeb.PlayerLive.Index do
 
   alias NflRushing.Statistics
   alias NflRushing.Statistics.Player
+  alias NflRushingWeb.Params.PlayerFilter.{SortingField, SortingOrder}
   alias Phoenix.LiveView.Socket
 
   @impl true
@@ -29,8 +30,8 @@ defmodule NflRushingWeb.PlayerLive.Index do
     {:noreply,
      socket
      |> assign(
-       sorting_order: cast_sorting_attribute(sorting_order),
-       sorting_field: cast_sorting_attribute(sorting_field)
+       sorting_order: cast_sorting_order(sorting_order),
+       sorting_field: cast_sorting_field(sorting_field)
      )
      |> assign_players_page()}
   end
@@ -71,14 +72,21 @@ defmodule NflRushingWeb.PlayerLive.Index do
     )
   end
 
-  @spec cast_sorting_attribute(binary()) :: atom()
-  defp cast_sorting_attribute("name"), do: :name
-  defp cast_sorting_attribute("total_rushing_yards"), do: :total_rushing_yards
-  defp cast_sorting_attribute("longest_rush_yards"), do: :longest_rush_yards
-  defp cast_sorting_attribute("rushing_touchdowns"), do: :rushing_touchdowns
+  @spec cast_sorting_field(binary()) :: atom()
+  def cast_sorting_field(sorting_field) do
+    case SortingField.cast(sorting_field) do
+      {:ok, sorting_field} -> sorting_field
+      _ -> :name
+    end
+  end
 
-  defp cast_sorting_attribute("desc"), do: :desc
-  defp cast_sorting_attribute("asc"), do: :asc
+  @spec cast_sorting_order(binary()) :: atom()
+  def cast_sorting_order(sorting_order) do
+    case SortingOrder.cast(sorting_order) do
+      {:ok, sorting_order} -> sorting_order
+      _ -> :asc
+    end
+  end
 
   @spec pagination_link(Socket.t(), binary() | integer(), integer(), boolean(), binary()) :: any()
   defp pagination_link(socket, label, page, active?, name_filter) do
