@@ -10,13 +10,12 @@ defmodule NflRushing.Statistics do
           {number(), nil} | {:error, atom | Jason.DecodeError.t()}
   def insert_players_from_file(file_name, batch_size \\ 500) do
     with {:ok, params} <- DataImport.parse_players_from_file(file_name) do
-      insertions_count =
-        params
-        |> Enum.chunk_every(batch_size)
-        |> Enum.map(&Repo.insert_all(Player, &1))
-        |> Enum.reduce(0, fn {inserted_rows, _}, accumulator -> accumulator + inserted_rows end)
-
-      {insertions_count, nil}
+      params
+      |> Enum.chunk_every(batch_size)
+      |> Enum.map(&Repo.insert_all(Player, &1))
+      |> Enum.reduce({0, nil}, fn {inserted_rows, second_term}, {accumulator, _} ->
+        {accumulator + inserted_rows, second_term}
+      end)
     end
   end
 
